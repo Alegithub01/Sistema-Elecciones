@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <title>Elecciones</title>
+</head>
+<body>
+    <form class="form" action="/home_elector" method="post">
+        {% block titulo %}
+        <h2 class="formTitulo">{{ titulo }}</h2>
+        {% endblock %}    
+        <div class="formContendor">
+            <div class="formGrupo">
+                <input type="text" id="user" class="formEntrada" placeholder=" " name="usuario">
+                {% block user %}
+                <label for="user" class="formLabel">Carnet de Identidad:</label>
+                {% endblock %}
+                <span class="formLine"></span>
+            </div>
+            <div class="formGrupo">
+                <input type="password" id="password" class="formEntrada" placeholder=" " name="contraseña">
+                {% block pass %}
+                <label for="password" class="formLabel">Fecha de Nacimiento:</label>
+                {% endblock %}
+                <span class="formLine"></span>
+            </div>
+            <input type="submit" class="formSubmite" value="Iniciar Sesión">
+        </div>
+        {% for value in lista %}
+        <p>{{ value }}</p>
+        {% endfor %}
+    </form>
+</body>
+</html>
