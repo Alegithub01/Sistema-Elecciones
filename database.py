@@ -26,110 +26,113 @@ cursor.execute("USE `lejandro$Sistema_Eleccion`;")
 TABLES = {}
 TABLES['Departamentos'] = ('''
     CREATE TABLE Departamento (
-    id_departamento NUMERIC NOT NULL,
+    id_departamento INT AUTO_INCREMENT NOT NULL,
     nombre VARCHAR(60) NOT NULL,
     PRIMARY KEY (id_departamento)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 TABLES['Distritos'] = ('''
     CREATE TABLE Distrito (
-    id_distrito NUMERIC NOT NULL,
-    id_departamento NUMERIC NOT NULL,
+    id_distrito INT AUTO_INCREMENT NOT NULL,
+    id_departamento INT NOT NULL,
     nombre VARCHAR(60) NOT NULL,
     PRIMARY KEY (id_distrito, id_departamento)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 TABLES['Elecciones'] = ('''
     CREATE TABLE Eleccion (
-    id_eleccion NUMERIC NOT NULL,
+    id_eleccion INT AUTO_INCREMENT NOT NULL,
     nombre VARCHAR(40) NOT NULL,
     fecha DATE NOT NULL,
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
     PRIMARY KEY (id_eleccion)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 TABLES['Resultado_ELecciones'] = ('''
     CREATE TABLE Resultado_Eleccion (
-    id_resultado NUMERIC NOT NULL,
-    id_eleccion NUMERIC NOT NULL,
-    candidato NUMERIC NOT NULL,
-    votos NUMERIC NOT NULL,
+    id_resultado INT AUTO_INCREMENT NOT NULL,
+    id_eleccion INT NOT NULL,
+    candidato INT NOT NULL,
+    votos INT NOT NULL,
     porcentaje DOUBLE PRECISION NOT NULL,
-    total_votos NUMERIC NOT NULL,
+    total_votos INT NOT NULL,
     PRIMARY KEY (id_resultado, id_eleccion, candidato)
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
-
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 TABLES['Partidos'] = ('''
     CREATE TABLE partido (
-    id_partido NUMERIC NOT NULL,
+    id_partido INT AUTO_INCREMENT NOT NULL,
     nombre VARCHAR(40) NOT NULL,
-    ideologia VARCHAR (255)NOT NULL,
+    ideologia VARCHAR(255) NOT NULL,
     PRIMARY KEY (id_partido)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
-
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 TABLES['Tribunales'] = ('''
     CREATE TABLE Tribunal (
-    id NUMERIC NOT NULL,
-    id_eleccion NUMERIC NOT NULL,
+    id INT AUTO_INCREMENT NOT NULL,
+    id_eleccion INT NOT NULL,
     nombre_usuario VARCHAR(100) NOT NULL,
     password VARCHAR(100) NULL,
     PRIMARY KEY (id, id_eleccion)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
-
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 TABLES['Administradores'] = ('''
     CREATE TABLE Administrador (
-    id_administrador NUMERIC NOT NULL,
+    id_administrador INT AUTO_INCREMENT NOT NULL,
     usuario VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
     PRIMARY KEY (id_administrador)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
-
-
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 TABLES['Usuarios'] = ('''
     CREATE TABLE Usuario (
-    ci NUMERIC NOT NULL,
-    id_distrito NUMERIC NOT NULL,
-    id_departamento NUMERIC NOT NULL,
+    ci INT NOT NULL,
+    id_distrito INT NOT NULL,
+    id_departamento INT NOT NULL,
     nombres VARCHAR(60) NOT NULL,
     apellidos VARCHAR(70) NOT NULL,
     fecha_nacimiento DATE NOT NULL,
     direccion VARCHAR(255) NOT NULL,
     genero VARCHAR(1) NOT NULL,
-    habilitado BOOLEAN NOT NULL,
-    voto BOOLEAN NOT NULL,
-    carnet LONGBLOB NOT NULL,
-    foto LONGBLOB NOT NULL,
+    habilitado BOOLEAN DEFAULT TRUE NOT NULL,
+    carnet LONGBLOB,
+    foto LONGBLOB,
     PRIMARY KEY (ci, id_distrito, id_departamento)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 
 TABLES['Candidatos'] = ('''
     CREATE TABLE Candidato (
-    id_candidato NUMERIC NOT NULL,
-    id_eleccion NUMERIC NOT NULL,
-    id_partido NUMERIC NOT NULL,
-    id_departamento NUMERIC NOT NULL,
-    id_distrito NUMERIC NOT NULL,
-    ci NUMERIC NOT NULL,
+    id_candidato INT AUTO_INCREMENT NOT NULL,
+    id_eleccion INT NOT NULL,
+    id_partido INT NOT NULL,
+    id_departamento INT NOT NULL,
+    id_distrito INT NOT NULL,
+    ci INT NOT NULL,
     PRIMARY KEY (id_candidato)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
-
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 TABLES['Votos'] = ('''
     CREATE TABLE Voto (
-    id_voto NUMERIC NOT NULL,
-    id_eleccion NUMERIC NOT NULL,
-    id_candidato NUMERIC NOT NULL,
-    id_distrito NUMERIC NOT NULL,
-    id_departamento NUMERIC NOT NULL,
-    ci_usuario NUMERIC NOT NULL,
+    id_voto INT AUTO_INCREMENT NOT NULL,
+    id_eleccion INT NOT NULL,
+    id_candidato INT NOT NULL,
+    id_distrito INT NOT NULL,
+    id_departamento INT NOT NULL,
+    ci_usuario INT NOT NULL,
     fecha DATETIME NOT NULL,
     PRIMARY KEY (id_voto, id_eleccion, id_candidato, id_distrito, id_departamento)
-    )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;''')
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+''')
 
 
 
