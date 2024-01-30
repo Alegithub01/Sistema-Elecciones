@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Información de Candidatos</title>
+</head>
+<body>
+    <h1>Información de Candidatos</h1>
+
+    {% if candidatos %}
+        <ul>
+            {% for candidato in candidatos %}
+                <li>
+                    ID Candidato: {{ candidato.id_candidato }} |
+                    ID Elección: {{ candidato.id_eleccion }} |
+                    ID Partido: {{ candidato.id_partido }} |
+                    ID Departamento: {{ candidato.id_departamento }} |
+                    ID Distrito: {{ candidato.id_distrito }} |
+                    CI: {{ candidato.ci }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No hay candidatos disponibles.</p>
+    {% endif %}
+</body>
+</html>
+
+
