@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Candidatos</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .candidates-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .candidate {
+            margin: 20px;
+            text-align: center;
+        }
+
+        .candidate img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .vote-button {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="candidates-container">
+        {% for candidato in candidatos %}
+        <div class="candidate">
+            <input type="radio" name="candidato" id="{{ candidato.get_nombre }}">
+            <img src="{{ url_for('static', filename='img/' + candidato.image_path) }}" alt="{{ candidato.get_nombre()}}">
+            <h3>{{ candidato.get_nombre() }}</h3>
+            <p>{{ candidato.partido }}</p>
+        </div>
+        {% endfor %}
+    
+        <div class="candidate">
+            <input type="radio" name="candidato" id="nulo">
+            <img src="/static/img/nulo.jpg" alt="NULO">
+            <h3>NULO</h3>
+        </div>
+    
+        <div class="candidate">
+            <input type="radio" name="candidato" id="blanco">
+            <img src="/static/img/blanco.jpg" alt="BLANCO">
+            <h3>VOTO EN BLANCO</h3>
+        </div>
+    </div>
+    
+<form method="post" action="{{ url_for('votar') }}">
+    <button type="submit" class="vote-button">Votar</button>
+</form>
+
+{% if mensaje %}
+<script>
+        alert("{{ mensaje }}");
+</script>
+{% endif %}
+
+</body>
+</html>
