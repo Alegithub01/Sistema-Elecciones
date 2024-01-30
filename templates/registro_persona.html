@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Usuarios</title>
+</head>
+<body>
+    <h1>Registro de Usuarios</h1>
+    <form action="/registro_persona" method="post" enctype="multipart/form-data">
+        <label for="ci">CI:</label>
+        <input type="text" name="ci" required><br>
+
+        <label for="id_distrito">ID Distrito:</label>
+        <input type="text" name="id_distrito" required><br>
+
+        <label for="id_departamento">ID Departamento:</label>
+        <input type="text" name="id_departamento" required><br>
+
+        <label for="nombres">Nombres:</label>
+        <input type="text" name="nombres" required><br>
+
+        <label for="apellidos">Apellidos:</label>
+        <input type="text" name="apellidos" required><br>
+
+        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
+        <input type="date" name="fecha_nacimiento" required><br>
+
+        <label for="direccion">Dirección:</label>
+        <input type="text" name="direccion" required><br>
+
+        <label for="genero">Género:</label>
+        <input type="text" name="genero" required maxlength="1"><br>
+
+        <label for="habilitado">Habilitado:</label>
+        <input type="checkbox" name="habilitado" checked><br>
+
+        <label for="carnet">Carnet:</label>
+        <input type="file" name="carnet" accept="image/*"><br>
+
+        <label for="foto">Foto:</label>
+        <input type="file" name="foto" accept="image/*"><br>
+
+        <input type="submit" value="Registrar">
+    </form>
+</body>
+</html>
