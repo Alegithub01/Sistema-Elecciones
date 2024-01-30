@@ -3,13 +3,6 @@ import mysql.connector
 
 app = Flask(__name__)
 
-DATABASE_CONFIG = {
-    'host': 'alejandroCaceres.mysql.pythonanywhere-services.com',
-    'user': 'alejandroCaceres',
-    'password': '------',
-    'database': 'alejandroCaceres$default'
-}
-
 @app.route('/home/<ci>')
 def obtener_informacion_elector(ci):
     try:
