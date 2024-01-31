@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link rel="stylesheet" href="/static/css/electorStyle.css">
+  <link rel="shortcut icon" href="/static/img/favicon.png">
   <title>Información del Elector</title>
 </head>
 <body>
@@ -11,14 +12,18 @@
     <h1>Información del Elector</h1>
     <div id="infoElector">
       <p><strong>Nombre:</strong> {{ elector.nombre }}</p>
-      <p><strong>Apellido:</strong> {{ elector.apellido }}</p>
+      <p><strong>Apellido Paterno:</strong> {{ elector.apellidoPaterno }}</p>
+      <p><strong>Apellido Materno:</strong> {{ elector.apellidoMaterno }}</p>
       <p><strong>C.I.:</strong> {{ elector.ci }}</p>
       <p><strong>Fecha de Nacimiento:</strong> {{ elector.fecha_nacimiento.strftime('%d/%m/%Y') }}</p>
       <p><strong>Estado:</strong> {{ elector.estado }}</p>
       <p><strong>Género:</strong> {{ elector.genero }}</p>
+      <p><strong>Direccion:</strong> {{ elector.direccion}}</p>
     </div>
-    <button id="btnVotar" onclick="votar()">Votar</button>
-    <button id="btnSalir" onclick="salir()">Salir</button>
+    <div class="btnContainer">
+      <img src="/static/img/iconoPapeleta.png" alt="Imagen" class="btnImagen">
+      <button id="btnVotar" class="btnConImagen" onclick="votar()">Ir a la papeleta</button>
+    </div>
   </div>
   <script src="script.js"></script>
 </body>
