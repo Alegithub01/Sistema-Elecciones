@@ -17,7 +17,7 @@
                     <input type="radio" name="candidato" id="{{ candidato.get_nombre }}">
                     <label for="{{ candidato.get_nombre }}">
                         <div class="infoCandidato">
-                            <img src="{{ url_for('static', filename='img/' + candidato.image_path) }}" alt="{{ candidato.get_nombre }}">
+                            <img src="{{ url_for('static', filename='img/' + candidato.imagen_path) }}" alt="{{ candidato.get_nombre }}">
                             <h3>{{ candidato.get_nombre }}</h3>
                             <p>{{ candidato.partido }}</p>
                         </div>
@@ -25,7 +25,7 @@
                 </div>
                 {% endfor %}
             </div>
-    
+
             <div class="votar-container">
                 <img src="/static/img/iconoVotar.png" alt="Imagen Votar" class="imagen-votar">
                 <button type="button" id="btnVotar" onclick="votar()">Votar</button>

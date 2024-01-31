@@ -1,20 +1,13 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request, redirect, session, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 
 app = Flask(__name__)
 app.secret_key = 'cochabamba'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = \
-    '{SGBD}://{usuario}:{clave}@{servidor}/{database}'.format(
-        SGBD = 'mysql+mysqlconnector',
-        usuario = 'lejandro',
-        clave = 'ez"4u4dwHd~HZ#7',
-        servidor = 'lejandro.mysql.pythonanywhere-services.com',
-        database = 'lejandro$Sistema_Eleccion'
-    )
-
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+mysqlconnector://lejandro:ez"4u4dwHd~HZ#7@lejandro.mysql.pythonanywhere-services.com/lejandro$Sistema_Eleccion'
 db = SQLAlchemy(app)
+
 
 class Persona(db.Model):
     __tablename__ = 'persona'
@@ -50,23 +43,68 @@ class Candidato(db.Model):
     id_candidato = db.Column(db.Integer, primary_key=True)
     ci_persona = db.Column(db.Integer, db.ForeignKey('persona.ci'), nullable=False)
     id_partido = db.Column(db.Integer, db.ForeignKey('partido.id_partido'), nullable=False)
-
-
+    imagen_path = db.Column(db.String(255), nullable=False)
 
 
 @app.route("/")
 def login_elector():
-    titulo="LOGIN ELECTOR"
-    return render_template("login.html",titulo=titulo)
+    titulo = "LOGIN ELECTOR"
+    return render_template("login.html", titulo=titulo)
+
+@app.route('/autenticar', methods=['POST'])
+def autenticar():
+    ci = request.form['usuario']
+    fecha_nacimiento = request.form['dob']
+
+    usuario = Persona.query.filter_by(ci=ci).first()
+    if usuario and fecha_nacimiento == str(usuario.fecha_nacimiento):
+        session['usuario_logueado'] = usuario.ci
+        flash(usuario.nombres + ' logueado con éxito!')
+        return redirect(url_for('home_elector', ci=ci))
+    else:
+        flash('Credenciales Incorrectos')
+        return redirect(url_for('login_elector'))
+
+@app.route('/home_elector/<ci>')
+def home_elector(ci):
+    usuario = Persona.query.filter_by(ci=ci).first()
+    if not usuario:
+        flash('Usuario no encontrado')
+        return redirect(url_for('login_elector'))
+
+    elector = Elector.query.filter_by(ci_persona=usuario.ci).first()
+    estado = "Deshabilitado" if elector is None else "Habilitado"
+
+    fecha_nacimiento = usuario.fecha_nacimiento.strftime('%d/%m/%Y') if usuario.fecha_nacimiento else 'Fecha no disponible'
+
+    return render_template("home.html",
+                           ci=ci,
+                           elector=elector,
+                           nombre=usuario.nombres,
+                           ap_paterno=usuario.ap_paterno,
+                           ap_materno=usuario.ap_materno,
+                           fecha_nacimiento=fecha_nacimiento,
+                           genero=usuario.genero,
+                           direccion=usuario.direccion,
+                           estado=estado)
 
 
+def obtener_candidatos():
+    candidatos = Candidato.query.all()
+    return candidatos
+
+
+@app.route('/papeleta_votacion/<ci>')
+def papeleta_votacion(ci):
+    tus_candidatos = obtener_candidatos()  # Asegúrate de obtener tus candidatos de la manera correcta
+    print(tus_candidatos)  # Imprime la lista de candidatos para verificar su estructura
+    return render_template('papeleta.html', ci=ci, candidatos=tus_candidatos)
 
 
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
 
 
 '''@app.route('/home/<ci>')
