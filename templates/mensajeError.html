@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/errorStyle.css">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <title>Error autenticacion</title>
+</head>
+<body>
+    <form class="form" action="/autenticar" method="post">
+    <h3>¡Error de autenticacion!</h3>
+
+    <p><strong>C.I.:</strong>:</strong> {{ nombre }}</p>
+    <p><strong>Fecha de Nacimiento:</strong> {{ ap_paterno }}</p>
+
+    <h3>Datos incorrectos</h3>
+    <button type="submit">Volver</button>
+</form>
+</body>
+</html>
