@@ -1,20 +1,132 @@
-from flask import Flask, render_template, request
-import mysql.connector
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 
-DATABASE_CONFIG = {
-    'host': 'lejandro.mysql.pythonanywhere-services.com',
-    'user': 'lejandro',
-    'password': 'ez"4u4dwHd~HZ#7',
-    'database': 'lejandro$Sistema_Eleccion'
-}
 
 app = Flask(__name__)
 app.secret_key = 'cochabamba'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = \
+    '{SGBD}://{usuario}:{clave}@{servidor}/{database}'.format(
+        SGBD = 'mysql+mysqlconnector',
+        usuario = 'lejandro',
+        clave = 'ez"4u4dwHd~HZ#7',
+        servidor = 'lejandro.mysql.pythonanywhere-services.com',
+        database = 'lejandro$Sistema_Eleccion'
+    )
+
+db = SQLAlchemy(app)
+
+class Persona(db.Model):
+    __tablename__ = 'persona'
+    ci = db.Column(db.Integer, primary_key=True)
+    nombres = db.Column(db.String(50), nullable=False)
+    ap_paterno = db.Column(db.String(40), nullable=False)
+    ap_materno = db.Column(db.String(40), nullable=False)
+    fecha_nacimiento = db.Column(db.Date(), nullable=False)
+    genero = db.Column(db.String(1), nullable=False)
+    direccion = db.Column(db.String(80), nullable=False)
+
+    def __repr__(self):
+        return f'<Personas ci={self.ci}, nombres={self.nombres}, ap_paterno={self.ap_paterno}, ap_materno={self.ap_materno}, fecha_nacimiento={self.fecha_nacimiento}, genero={self.genero}, direccion={self.direccion}>'
+
+
+class Elector(db.Model):
+    __tablename__ = 'elector'
+    id_elector = db.Column(db.Integer, primary_key=True)
+    ci_persona = db.Column(db.Integer, db.ForeignKey('persona.ci'), nullable=False)
+    habilitado = db.Column(db.Boolean(), default=True)
+
+    def __repr__(self):
+        return f'<Elector id_elector={self.id_elector}, ci_persona={self.ci_persona}, habilitado={self.habilitado}>'
+
+class Partido(db.Model):
+    __tablename__ = 'partido'
+    id_partido = db.Column(db.Integer, primary_key=True)
+    nombre_partido = db.Column(db.String(50), nullable=False)
+    siglas = db.Column(db.String(8), nullable=False)
+
+class Candidato(db.Model):
+    __tablename__ = 'candidato'
+    id_candidato = db.Column(db.Integer, primary_key=True)
+    ci_persona = db.Column(db.Integer, db.ForeignKey('persona.ci'), nullable=False)
+    id_partido = db.Column(db.Integer, db.ForeignKey('partido.id_partido'), nullable=False)
+
+
+
 
 @app.route("/")
 def login_elector():
     titulo="LOGIN ELECTOR"
     return render_template("login.html",titulo=titulo)
+
+
+
+
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)
+
+
+
+'''@app.route('/home/<ci>')
+def obtener_informacion_elector(ci):
+    try:
+        conn = mysql.connector.connect(**DATABASE_CONFIG)
+        cursor = conn.cursor(dictionary=True)
+
+        consulta = "SELECT * FROM Usuario WHERE ci = %s"
+        cursor.execute(consulta, (ci,))
+        elector = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        return render_template('home.html', elector=elector)
+
+    except mysql.connector.Error as err:
+        return f"Error en la base de datos: {err}"
+
+
+@app.route("/home_elector", methods=["GET", "POST"])
+def home_elector():
+    if request.method == "POST":
+        ci = request.form.get("user")
+        fecha_nacimiento = request.form.get("password")
+
+        try:
+            # Crear una conexión a la base de datos
+            conn = mysql.connector.connect(**DATABASE_CONFIG)
+            cursor = conn.cursor(dictionary=True)
+
+            # Consultar la base de datos para verificar las credenciales
+            query = "SELECT * FROM Usuario WHERE ci = %s AND fecha_nacimiento = %s"
+            values = (ci, fecha_nacimiento)
+            cursor.execute(query, values)
+
+            # Obtener el resultado de la consulta
+            persona = cursor.fetchone()
+
+            if persona:
+                # Si las credenciales son correctas, redirigir a la página de inicio con el número de CI
+                return redirect(url_for('obtener_informacion_elector', ci=ci))
+            else:
+                # Si las credenciales son incorrectas, mostrar un mensaje de error
+                error_message = "Carnet de identidad o fecha de nacimiento incorrectos."
+                return render_template("login.html", titulo="Inicio de Sesión", error_message=error_message)
+
+        except Exception as e:
+            # En caso de error, mostrar un mensaje de error
+            error_message = f"Error: {str(e)}"
+            return render_template("login.html", titulo="Inicio de Sesión", error_message=error_message)
+
+        finally:
+            # Cerrar la conexión y el cursor
+            cursor.close()
+            conn.close()
+
+    return render_template("login.html", titulo="Inicio de Sesión")
+
 
 @app.route("/registro_persona", methods=["GET", "POST"])
 def registro_persona():
@@ -60,24 +172,6 @@ def registro_persona():
     return render_template("registro_persona.html")
 
 
-
-@app.route('/home/<ci>')
-def obtener_informacion_elector(ci):
-    try:
-        conn = mysql.connector.connect(**DATABASE_CONFIG)
-        cursor = conn.cursor(dictionary=True)
-
-        consulta = "SELECT * FROM Usuario WHERE ci = %s"
-        cursor.execute(consulta, (ci,))
-        elector = cursor.fetchone()
-
-        cursor.close()
-        conn.close()
-
-        return render_template('home.html', elector=elector)
-
-    except mysql.connector.Error as err:
-        return f"Error en la base de datos: {err}"
 
 @app.route("/registro_distrito", methods=["GET", "POST"])
 def registro_distrito():
@@ -179,7 +273,4 @@ def login_administrador():
 def login_tribunal():
     titulo="LOGIN TRIBUNAL"
     return render_template("login_tribunal.html",titulo=titulo)
-
-if __name__ == "__main__":
-    app.run(debug=True)
-'''blueprint investigar'''
+'''
