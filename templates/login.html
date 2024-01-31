@@ -3,32 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-    <title>Elecciones</title>
+    <link rel="stylesheet" href="/static/css/loginStyle.css">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <title>Inicio de Sesión Elector</title>
 </head>
 <body>
     <form class="form" action="/home_elector" method="post">
-        {% block titulo %}
-        <h2 class="formTitulo">{{ titulo }}</h2>
-        {% endblock %}    
-        <div class="formContendor">
-            <div class="formGrupo">
-                <input type="text" id="user" class="formEntrada" placeholder=" " name="usuario">
-                {% block user %}
-                <label for="user" class="formLabel">Carnet de Identidad:</label>
-                {% endblock %}
-                <span class="formLine"></span>
-            </div>
-            <div class="formGrupo">
-                <input type="password" id="password" class="formEntrada" placeholder=" " name="contraseña">
-                {% block pass %}
-                <label for="password" class="formLabel">Fecha de Nacimiento:</label>
-                {% endblock %}
-                <span class="formLine"></span>
-            </div>
-            <input type="submit" class="formSubmite" value="Iniciar Sesión">
-        </div>
+        <h3>Iniciar Sesión</h3>
+
+        <label for="username">Cedula de Identidad:</label>
+        <input type="text" placeholder="Cedula de Identidad" id="username" name="usuario">
+
+        <label for="dob">Fecha de Nacimiento:</label>
+        <input type="date" id="dob" name="dob">
+
+        <button type="submit">Ingresar</button>
     </form>
 </body>
 </html>
