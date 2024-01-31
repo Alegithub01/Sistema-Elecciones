@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/papeletaStyle.css">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <title>Papeleta de Votación</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Elecciones 2024</h1>
+        <form id="candidatoForm">
+            <div class="candidates-container">
+                {% for candidato in candidatos %}
+                <div class="candidato">
+                    <input type="radio" name="candidato" id="{{ candidato.get_nombre }}">
+                    <label for="{{ candidato.get_nombre }}">
+                        <div class="infoCandidato">
+                            <img src="{{ url_for('static', filename='img/' + candidato.image_path) }}" alt="{{ candidato.get_nombre }}">
+                            <h3>{{ candidato.get_nombre }}</h3>
+                            <p>{{ candidato.partido }}</p>
+                        </div>
+                    </label>
+                </div>
+                {% endfor %}
+            </div>
+    
+            <div class="votar-container">
+                <img src="/static/img/iconoVotar.png" alt="Imagen Votar" class="imagen-votar">
+                <button type="button" id="btnVotar" onclick="votar()">Votar</button>
+            </div>
+        </form>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
