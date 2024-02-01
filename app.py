@@ -5,7 +5,7 @@ import io
 import base64
 from matplotlib import pyplot as plt
 
-app = Flask(_name_)
+app = Flask(__name__)
 
 # Configuración de la ruta a la carpeta de plantillas
 app.template_folder = '/home/DanielTolaba41/mysite/templates'
@@ -21,7 +21,7 @@ def home():
 
 # Modelo de la base de datos
 class ResultadoEleccion(db.Model):
-    _tablename_ = 'Resultado_Eleccion'
+    __tablename__ = 'Resultado_Eleccion'
 
     id_resultado = db.Column(db.Integer, primary_key=True)
     id_eleccion = db.Column(db.Integer)
@@ -44,9 +44,17 @@ def resultados():
         votos = [resultado.votos for resultado in resultados]
         porcentajes = [voto / total_votos * 100 for voto in votos]
 
-        # Crear la gráfica de pastel
+        # Crear la gráfica de barras
         plt.figure(figsize=(8, 8))
-        plt.pie(porcentajes, labels=candidatos, autopct='%1.1f%%', startangle=140)
+        bars = plt.bar(candidatos, porcentajes, alpha=0.7)
+
+        # Añadir etiquetas de porcentaje en las torres
+        for bar in bars:
+            yval = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.1f}%', ha='center', va='bottom')
+
+        plt.xlabel('Candidatos')
+        plt.ylabel('Porcentaje')
         plt.title('Resultados de la Elección')
 
         # Guardar la gráfica en un objeto de bytes
@@ -58,10 +66,10 @@ def resultados():
         graph_url = base64.b64encode(img.getvalue()).decode()
         img.close()
 
-        return render_template('resultados.html', resultados=resultados, total_votos=total_votos, porcentajes=porcentajes, graph_url=graph_url)
+        return render_template('resultados.html', resultados=resultados, total_votos=total_votos, graph_url=graph_url)
 
     except Exception as e:
         return f"Error: {str(e)}"
 
-if _name_ == '_main_':
+if __name__ == '__main__':
     app.run(debug=True)

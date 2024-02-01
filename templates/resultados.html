@@ -1,17 +1,17 @@
 <!-- resultados.html -->
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Resultados de las Elecciones</title>
+    <meta charset="UTF-8">
+    <title>Resultados de la Elección</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1>Resultados de Elección</h1>
+        <h1>Resultados de elección</h1>
         <div class="graph-container">
-            <img src="data:image/png;base64,{{ graph_url }}" alt="Gráfica de Pastel">
+            <img src="data:image/png;base64,{{ graph_url }}" alt="Gráfica de Barras Apiladas">
         </div>
         <div class="table-container">
             <table>
@@ -29,7 +29,7 @@
                         <td>{{ resultado.id_eleccion }}</td>
                         <td>{{ resultado.candidato }}</td>
                         <td>{{ resultado.votos }}</td>
-                        <td>{{ '%.1f' % resultado.porcentaje }}%</td>
+                        <td>{{ '%.1f%%' % resultado.porcentaje }}</td>
                         <td>{{ total_votos }}</td>  <!-- Muestra el total de votos -->
                     </tr>
                 {% endfor %}
