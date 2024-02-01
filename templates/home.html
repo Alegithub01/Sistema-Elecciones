@@ -1,34 +1,41 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/static/css/electorStyle.css">
-  <link rel="shortcut icon" href="/static/img/favicon.png">
-  <title>Información del Elector</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/electorStyle.css">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <title>Información del Elector</title>
+    {% if estado == 'Deshabilitado' %}
+        <script>
+            setTimeout(function() {
+                window.location.href = '/';
+            }, 5000);  // Redirigir después de 5 segundos
+        </script>
+    {% endif %}
 </head>
 <body>
-  <div class="container">
-    <h1>Información del Elector</h1>
-    <div id="infoElector">
-      <p><strong>Nombre:</strong> {{ nombre }}</p>
-      <p><strong>Apellido Paterno:</strong> {{ ap_paterno }}</p>
-      <p><strong>Apellido Materno:</strong> {{ ap_materno }}</p>
-      <p><strong>C.I.:</strong> {{ ci }}</p>
-      <p><strong>Fecha de Nacimiento:</strong> {{ fecha_nacimiento }}</p>
-      <p><strong>Estado:</strong> {{ estado }}</p>
-      <p><strong>Género:</strong> {{ genero }}</p>
-      <p><strong>Direccion:</strong> {{ direccion }}</p>
+    <div class="container">
+        <h1>Información del Elector</h1>
+        <div id="infoElector">
+            <p><strong>Nombre:</strong> {{ nombre }}</p>
+            <p><strong>Apellido Paterno:</strong> {{ ap_paterno }}</p>
+            <p><strong>Apellido Materno:</strong> {{ ap_materno }}</p>
+            <p><strong>C.I.:</strong> {{ ci }}</p>
+            <p><strong>Fecha de Nacimiento:</strong> {{ fecha_nacimiento }}</p>
+            <p><strong>Estado:</strong> {{ estado }}</p>
+            <p><strong>Género:</strong> {{ genero }}</p>
+            <p><strong>Dirección:</strong> {{ direccion }}</p>
+        </div>
+        <div class="btnContainer">
+            <img src="/static/img/iconoPapeleta.png" alt="Imagen" class="btnImagen">
+            {% if estado == 'Habilitado' %}
+                <button id="btnVotar" class="btnConImagen" onclick="window.location.href='{{ url_for('papeleta_votacion', ci=ci) }}'">Ir a la papeleta</button>
+            {% else %}
+                <p>Usted no está habilitado para votar en este momento.</p>
+            {% endif %}
+        </div>
     </div>
-    <div class="btnContainer">
-      <img src="/static/img/iconoPapeleta.png" alt="Imagen" class="btnImagen">
-     <button id="btnVotar" class="btnConImagen" onclick="window.location.href='{{ url_for('papeleta_votacion', ci=ci) }}'">Ir a la papeleta</button>
-
-
-
-
-    </div>
-  </div>
-  <script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
