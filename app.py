@@ -44,9 +44,10 @@ def resultados():
         votos = [resultado.votos for resultado in resultados]
         porcentajes = [voto / total_votos * 100 for voto in votos]
 
-        # Crear la gráfica de barras
+        # Crear la gráfica de barras con colores diferentes de la paleta tab10
         plt.figure(figsize=(8, 8))
-        bars = plt.bar(candidatos, porcentajes, alpha=0.7)
+        colors = plt.cm.tab10.colors  # Utiliza la paleta de colores tab10 de Matplotlib
+        bars = plt.bar(candidatos, porcentajes, alpha=0.7, color=colors)
 
         # Añadir etiquetas de porcentaje en las torres
         for bar in bars:
