@@ -2,16 +2,21 @@
 
 body {
     font-family: Arial, sans-serif;
+    background-color: #cce5ff; 
 }
 
 .container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    background-color: #ffffff; /* Fondo blanco para el contenido */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Sombra suave */
 }
 
 h1 {
     text-align: center;
+    color: #1565c0; /* Color del texto */
 }
 
 .graph-container {
@@ -38,4 +43,3 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Adjust styles as needed */
