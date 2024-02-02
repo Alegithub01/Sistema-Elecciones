@@ -6,27 +6,29 @@
     <meta charset="UTF-8">
     <title>Resultados de la Elección</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        function imprimir() {
+            window.print();
+        }
+    </script>
 </head>
 <body>
     <div class="container">
-        <h1>Resultados de elección</h1>
+        <h1 class="print-title">Resultados de elección</h1>
         <div class="graph-container">
             <img src="data:image/png;base64,{{ graph_url }}" alt="Gráfica de Barras Apiladas">
         </div>
         <div class="table-container">
             <table>
                 <tr>
-                    <th>ID Resultado</th>
-                    <th>ID Eleccion</th>
                     <th>Candidato</th>
                     <th>Votos</th>
                     <th>Porcentaje</th>
-                    <th>Total Votos</th>  
+                    <th>Total Votos</th>
                 </tr>
                 {% for resultado in resultados %}
                     <tr>
-                        <td>{{ resultado.id_resultado }}</td>
-                        <td>{{ resultado.id_eleccion }}</td>
+                        <!-- Elimina las columnas ID Resultado e ID Eleccion -->
                         <td>{{ resultado.candidato }}</td>
                         <td>{{ resultado.votos }}</td>
                         <td>{{ '%.1f%%' % resultado.porcentaje }}</td>
@@ -36,5 +38,9 @@
             </table>
         </div>
     </div>
+    <div class="print-button-container">
+        <button onclick="imprimir()">Imprimir</button>
+    </div>
+
 </body>
 </html>

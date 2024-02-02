@@ -44,15 +44,15 @@ def resultados():
         votos = [resultado.votos for resultado in resultados]
         porcentajes = [voto / total_votos * 100 for voto in votos]
 
-        # Crear la gráfica de barras con colores diferentes de la paleta tab10
-        plt.figure(figsize=(8, 8))
+        # Crear la gráfica de barras con colores diferentes de la paleta tab10 y mayor resolución
+        plt.figure(figsize=(8, 8), dpi=300)  # Ajusta el valor de dpi según sea necesario
         colors = plt.cm.tab10.colors  # Utiliza la paleta de colores tab10 de Matplotlib
         bars = plt.bar(candidatos, porcentajes, alpha=0.7, color=colors)
 
         # Añadir etiquetas de porcentaje en las torres
         for bar in bars:
-            yval = bar.get_height()
-            plt.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.1f}%', ha='center', va='bottom')
+         yval = bar.get_height()
+         plt.text(bar.get_x() + bar.get_width()/2, yval, f'{yval:.1f}%', ha='center', va='bottom')
 
         plt.xlabel('Candidatos')
         plt.ylabel('Porcentaje')
@@ -66,6 +66,7 @@ def resultados():
         # Convertir la gráfica a base64 para mostrarla en la plantilla
         graph_url = base64.b64encode(img.getvalue()).decode()
         img.close()
+
 
         return render_template('resultados.html', resultados=resultados, total_votos=total_votos, graph_url=graph_url)
 
