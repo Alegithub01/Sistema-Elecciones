@@ -32,7 +32,7 @@
             {% if estado == 'Habilitado' %}
                 <button id="btnVotar" class="btnConImagen" onclick="window.location.href='{{ url_for('papeleta_votacion', ci=ci) }}'">Ir a la papeleta</button>
             {% else %}
-                <p>Usted no está habilitado para votar en este momento.</p>
+                <p class="mensaje-inhabilitado">Usted no está habilitado para votar en este momento.</p>
             {% endif %}
         </div>
     </div>

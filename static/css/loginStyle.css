@@ -9,13 +9,13 @@
 }
 
 body {
-    background-color: #7b9cdc;
+    background-color: #fff;
 }
 
 .form {
     height: 520px;
     width: 400px;
-    background-color: #f5f5f5;
+    background-color: #19568b;
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -29,7 +29,7 @@ body {
 
 .form * {
     font-family: 'Poppins', sans-serif;
-    color: #000539;
+    color: #fff;
     letter-spacing: 0.5px;
     outline: none;
     border: none;
@@ -61,21 +61,23 @@ input {
     font-weight: 300;
 }
 
+
 ::placeholder {
-    color: #536e86;
+    color: #000539;
 }
 
 button {
     margin-top: 50px;
     width: 100%;
-    background-color: #f50057;
-    color: #fff;
+    background-color: #bd0113;
+    color: #fff; 
     padding: 15px 0;
     font-size: 18px;
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
 }
+
 
 .mensaje-error {
     color: red;
