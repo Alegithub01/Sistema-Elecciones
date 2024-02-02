@@ -65,12 +65,7 @@ label:hover .candidato {
     background-color: #e0e0e0;
 }
 
-.fotoCandidato {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-    border-bottom: 2px solid #fff;
-}
+
 
 .infoCandidato {
     padding: 20px;
@@ -80,6 +75,13 @@ label:hover .candidato {
     position: absolute;
     bottom: 0;
     left: 0;
+}
+
+.fotoCandidato {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-bottom: 2px solid #fff;
 }
 
 #btnVotar {
