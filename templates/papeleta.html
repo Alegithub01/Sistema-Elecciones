@@ -14,12 +14,12 @@
             <div class="candidates-container">
                 {% for candidato in candidatos %}
                 <div class="candidato">
-                    <input type="radio" name="candidato" id="{{ candidato.get_nombre }}" class="check">
-                    <label for="{{ candidato.get_nombre }}">
+                    <input type="radio" name="candidato" id="{{ candidato.ci_persona }}" class="check">
+                    <label for="{{ candidato.ci_persona }}">
                         <div class="infoCandidato">
-                            <img src="{{ url_for('static', filename='img/' + candidato.imagen_path) }}" alt="{{ candidato.get_nombre }}" class="fotoCandidato">
-                            <h3>{{ candidato.get_nombre }}</h3>
-                            <p>{{ candidato.partido }}</p>
+                            <img src="{{ url_for('static', filename='img/' + candidato.imagen_path) }}" alt="{{ candidato.ci_persona }}">
+                            <p>{{ candidato.persona.ap_paterno }}</p>
+                            <p>{{ candidato.partido.siglas }}</p>
                         </div>
                     </label>
                 </div>
@@ -35,5 +35,6 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!--dsdsds-->>
 
 

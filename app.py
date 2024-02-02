@@ -38,13 +38,23 @@ class Partido(db.Model):
     nombre_partido = db.Column(db.String(50), nullable=False)
     siglas = db.Column(db.String(8), nullable=False)
 
+
 class Candidato(db.Model):
     __tablename__ = 'candidato'
     id_candidato = db.Column(db.Integer, primary_key=True)
     ci_persona = db.Column(db.Integer, db.ForeignKey('persona.ci'), nullable=False)
+    persona = db.relationship('Persona', foreign_keys=[ci_persona])
     id_partido = db.Column(db.Integer, db.ForeignKey('partido.id_partido'), nullable=False)
+    partido = db.relationship('Partido')
     imagen_path = db.Column(db.String(255), nullable=False)
 
+
+
+class Voto(db.Model):
+    __tablename__ = 'voto'
+    id_voto = db.Column(db.Integer,primary_key=True)
+    ci_elector = db.Column(db.String)
+    id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id_candidato'), nullable=False)
 
 
 
@@ -117,7 +127,6 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
 
 '''@app.route('/home/<ci>')
 def obtener_informacion_elector(ci):
