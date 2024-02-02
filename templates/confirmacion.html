@@ -3,43 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Confirmación de Votación</title>
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-        }
-
-        .confirmation-message {
-            font-size: 24px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .redirect-timer {
-            font-size: 18px;
-        }
-    </style>
+    <link rel="stylesheet" href="/static/css/errorStyle.css">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <title>Error autenticación</title>
+    <script>
+        // Espera 5 segundos y luego redirige a la página principal
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 5000);
+    </script>
 </head>
 <body>
-
-<div class="confirmation-message">
-    ¡Gracias por tu voto!
-</div>
-
-<div class="redirect-timer">
-    Serás redirigido automáticamente a la página principal en unos segundos.
-</div>
-
-<script>
-    setTimeout(function(){
-        window.location.href = "{{ url_for('login_elector') }}";
-    }, 3000);  // Redirigir después de 3 segundos (puedes ajustar el tiempo según tus necesidades)
-</script>
-
+    <form class="form" action="/" method="post">
+        <h3>¡Gracias por su voto!</h3>
+        <h2>VOTO REGISTRADO EXITOSAMENTE</h2>
+    </form>
 </body>
 </html>
