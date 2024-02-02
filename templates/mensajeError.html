@@ -5,17 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/css/errorStyle.css">
     <link rel="shortcut icon" href="/static/img/favicon.png">
-    <title>Error autenticacion</title>
+    <title>Error autenticación</title>
+    <script>
+        // Espera 5 segundos y luego redirige a la página principal
+        setTimeout(function() {
+            window.location.href = '/';
+        }, 5000);
+    </script>
 </head>
 <body>
-    <form class="form" action="/autenticar" method="post">
-    <h3>¡Error de autenticacion!</h3>
+    <form class="form" action="/" method="post">
+        <h3>¡Error de autenticación!</h3>
 
-    <p><strong>C.I.:</strong>:</strong> {{ nombre }}</p>
-    <p><strong>Fecha de Nacimiento:</strong> {{ ap_paterno }}</p>
+        <p><strong>C.I.:</strong> {{ ci }}</p>
+        <p><strong>Fecha de Nacimiento:</strong> {{ fecha_nacimiento }}</p>
 
-    <h3>Datos incorrectos</h3>
-    <a href="/login.html">Volver</a>
-</form>
+        <h3>No Registrado En El Padron Electoral</h3>
+    </form>
 </body>
 </html>

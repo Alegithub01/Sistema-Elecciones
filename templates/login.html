@@ -9,15 +9,19 @@
 </head>
 <body>
     <form class="form" action="/autenticar" method="post">
-    <h3>Iniciar Sesión</h3>
+        <h3>Iniciar Sesión</h3>
 
-    <label for="username">Cedula de Identidad:</label>
-    <input type="text" placeholder="Cedula de Identidad" id="username" name="usuario">
+        <label for="username">Cedula de Identidad:</label>
+        <input type="text" placeholder="Cedula de Identidad" id="username" name="usuario" required>
 
-    <label for="dob">Fecha de Nacimiento:</label>
-    <input type="date" id="dob" name="dob">
+        <label for="dob">Fecha de Nacimiento:</label>
+        <input type="date" id="dob" name="dob" required>
 
-    <button type="submit">Ingresar</button>
-</form>
+        {% if mensaje_error %}
+        <p class="mensaje-error">{{ mensaje_error }}</p>
+        {% endif %}
+
+        <button type="submit">Ingresar</button>
+    </form>
 </body>
 </html>

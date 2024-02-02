@@ -37,20 +37,18 @@ p {
     margin-bottom: 10px;
 }
 
-a {
+button {
     background-color: #f50057;
     color: #fff;
-    text-decoration: none;
     padding: 15px 20px;
     font-size: 18px;
     font-weight: 600;
+    border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-a:hover {
+button:hover {
     background-color: #e40046;
 }
-
-

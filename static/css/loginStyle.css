@@ -1,4 +1,4 @@
-/* style.css */
+/* loginStyle.css */
 
 *,
 *:before,
@@ -9,29 +9,13 @@
 }
 
 body {
-    background-color: #7b9cdc; /* Fondo azul claro */
+    background-color: #7b9cdc;
 }
 
-.background {
-    width: 430px;
-    height: 520px;
-    position: absolute;
-    transform: translate(-50%, -50%);
-    left: 50%;
-    top: 50%;
-}
-
-.background .shape {
-    height: 200px;
-    width: 200px;
-    position: absolute;
-    border-radius: 50%;
-}
-
-form {
+.form {
     height: 520px;
     width: 400px;
-    background-color: #f5f5f5; /* Nuevo color de fondo del formulario - gris claro */
+    background-color: #f5f5f5;
     position: absolute;
     transform: translate(-50%, -50%);
     top: 50%;
@@ -43,15 +27,15 @@ form {
     padding: 50px 35px;
 }
 
-form * {
+.form * {
     font-family: 'Poppins', sans-serif;
-    color: #000539; /* Texto principal - azul oscuro */
+    color: #000539;
     letter-spacing: 0.5px;
     outline: none;
     border: none;
 }
 
-form h3 {
+.form h3 {
     font-size: 32px;
     font-weight: 500;
     line-height: 42px;
@@ -69,7 +53,7 @@ input {
     display: block;
     height: 50px;
     width: 100%;
-    background-color: #cfe2f3; /* Nuevo color de fondo para los inputs - azul claro */
+    background-color: #cfe2f3;
     border-radius: 3px;
     padding: 0 10px;
     margin-top: 8px;
@@ -78,17 +62,23 @@ input {
 }
 
 ::placeholder {
-    color: #536e86; /* Color del marcador de posición - gris azulado */
+    color: #536e86;
 }
 
 button {
     margin-top: 50px;
     width: 100%;
-    background-color: #f50057; /* Botón - fucsia suave */
-    color: #fff; /* Texto del botón - blanco */
+    background-color: #f50057;
+    color: #fff;
     padding: 15px 0;
     font-size: 18px;
     font-weight: 600;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.mensaje-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
 }

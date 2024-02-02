@@ -27,7 +27,7 @@ class Elector(db.Model):
     __tablename__ = 'elector'
     id_elector = db.Column(db.Integer, primary_key=True)
     ci_persona = db.Column(db.Integer, db.ForeignKey('persona.ci'), nullable=False)
-    habilitado = db.Column(db.Boolean(), default=True)
+    habilitado = db.Column(db.Boolean(), nullable=False, server_default='1')
 
     def __repr__(self):
         return f'<Elector id_elector={self.id_elector}, ci_persona={self.ci_persona}, habilitado={self.habilitado}>'
@@ -44,6 +44,8 @@ class Candidato(db.Model):
     ci_persona = db.Column(db.Integer, db.ForeignKey('persona.ci'), nullable=False)
     id_partido = db.Column(db.Integer, db.ForeignKey('partido.id_partido'), nullable=False)
     imagen_path = db.Column(db.String(255), nullable=False)
+
+
 
 
 @app.route("/")
@@ -63,17 +65,27 @@ def autenticar():
         return redirect(url_for('home_elector', ci=ci))
     else:
         flash('Credenciales Incorrectos')
-        return redirect(url_for('login_elector'))
+        return redirect(url_for('error_autenticacion', ci=ci, fecha_nacimiento=fecha_nacimiento))
+
+
+@app.route('/error_autenticacion/<ci>/<fecha_nacimiento>')
+def error_autenticacion(ci, fecha_nacimiento):
+    return render_template('mensajeError.html', ci=ci, fecha_nacimiento=fecha_nacimiento)
+
+
+
 
 @app.route('/home_elector/<ci>')
 def home_elector(ci):
     usuario = Persona.query.filter_by(ci=ci).first()
+
     if not usuario:
         flash('Usuario no encontrado')
         return redirect(url_for('login_elector'))
 
-    elector = Elector.query.filter_by(ci_persona=usuario.ci).first()
-    estado = "Deshabilitado" if elector is None else "Habilitado"
+    elector = Elector.query.filter_by(ci_persona=ci).first()
+
+    estado = "Deshabilitado" if elector is None or not elector.habilitado else "Habilitado"
 
     fecha_nacimiento = usuario.fecha_nacimiento.strftime('%d/%m/%Y') if usuario.fecha_nacimiento else 'Fecha no disponible'
 
@@ -96,8 +108,8 @@ def obtener_candidatos():
 
 @app.route('/papeleta_votacion/<ci>')
 def papeleta_votacion(ci):
-    tus_candidatos = obtener_candidatos()  # Asegúrate de obtener tus candidatos de la manera correcta
-    print(tus_candidatos)  # Imprime la lista de candidatos para verificar su estructura
+    tus_candidatos = obtener_candidatos()
+    print(tus_candidatos)
     return render_template('papeleta.html', ci=ci, candidatos=tus_candidatos)
 
 
