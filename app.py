@@ -1,5 +1,6 @@
-from flask import Flask, render_template,request, redirect, session, flash, url_for
+from flask import Flask, render_template,request, redirect, session, flash, url_for,jsonify
 from flask_sqlalchemy import SQLAlchemy
+
 
 
 app = Flask(__name__)
@@ -32,6 +33,7 @@ class Elector(db.Model):
     def __repr__(self):
         return f'<Elector id_elector={self.id_elector}, ci_persona={self.ci_persona}, habilitado={self.habilitado}>'
 
+
 class Partido(db.Model):
     __tablename__ = 'partido'
     id_partido = db.Column(db.Integer, primary_key=True)
@@ -52,16 +54,16 @@ class Candidato(db.Model):
 
 class Voto(db.Model):
     __tablename__ = 'voto'
-    id_voto = db.Column(db.Integer,primary_key=True)
-    ci_elector = db.Column(db.String)
+    id_voto = db.Column(db.Integer, primary_key=True)
     id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id_candidato'), nullable=False)
-
+    candidato = db.relationship('Candidato')
 
 
 @app.route("/")
 def login_elector():
     titulo = "LOGIN ELECTOR"
     return render_template("login.html", titulo=titulo)
+
 
 @app.route('/autenticar', methods=['POST'])
 def autenticar():
@@ -81,6 +83,44 @@ def autenticar():
 @app.route('/error_autenticacion/<ci>/<fecha_nacimiento>')
 def error_autenticacion(ci, fecha_nacimiento):
     return render_template('mensajeError.html', ci=ci, fecha_nacimiento=fecha_nacimiento)
+
+
+@app.route('/resultados')
+def resultados():
+    try:
+        # Aquí deberías tener lógica para obtener los resultados desde tu base de datos
+        # Los resultados podrían ser algo como una lista de diccionarios
+        resultados = [
+            {"candidato": "Candidato1", "votos": 150, "porcentaje": 50.0},
+            {"candidato": "Candidato2", "votos": 100, "porcentaje": 33.3},
+            {"candidato": "Candidato3", "votos": 50, "porcentaje": 16.7},
+        ]
+
+        # Calcular la suma total de votos
+        total_votos = sum(resultado['votos'] for resultado in resultados)
+
+        return render_template('resultados.html', resultados=resultados, total_votos=total_votos)
+
+    except Exception as e:
+        return f"Error: {str(e)}"
+
+
+
+@app.route('/guardar_voto/<ci>', methods=['POST'])
+def guardar_voto(ci):
+    try:
+        id_candidato_seleccionado = request.form.get('candidato')
+        elector = Elector.query.filter_by(ci_persona=ci).first()
+
+        nuevo_voto = Voto(id_candidato=id_candidato_seleccionado)
+        db.session.add(nuevo_voto)
+        elector.habilitado = False
+        db.session.commit()
+
+        return render_template('confirmacion.html')
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
 
 
 
@@ -119,7 +159,6 @@ def obtener_candidatos():
 @app.route('/papeleta_votacion/<ci>')
 def papeleta_votacion(ci):
     tus_candidatos = obtener_candidatos()
-    print(tus_candidatos)
     return render_template('papeleta.html', ci=ci, candidatos=tus_candidatos)
 
 

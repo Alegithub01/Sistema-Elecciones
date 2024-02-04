@@ -10,11 +10,11 @@
 <body>
     <div class="container">
         <h1>Elecciones 2024</h1>
-        <form id="candidatoForm">
+        <form id="candidatoForm" action="{{ url_for('guardar_voto', ci=ci) }}" method="post" onsubmit="return validarSeleccion()">
             <div class="candidates-container">
                 {% for candidato in candidatos %}
                 <div class="candidato">
-                    <input type="radio" name="candidato" id="{{ candidato.ci_persona }}" class="check">
+                    <input type="radio" name="candidato" id="{{ candidato.ci_persona }}" class="check" value="{{ candidato.id_candidato }}">
                     <label for="{{ candidato.ci_persona }}">
                         <div class="infoCandidato">
                             <img src="{{ url_for('static', filename='img/' + candidato.imagen_path) }}" alt="{{ candidato.ci_persona }}">
@@ -28,13 +28,34 @@
 
             <div class="votar-container">
                 <img src="/static/img/iconoVotar.png" alt="Imagen Votar" class="imagen-votar">
-                <button type="button" id="btnVotar" onclick="votar()">Votar</button>
+                <input type="hidden" id="idCandidatoSeleccionado" name="idCandidatoSeleccionado" value="">
+                <button type="submit" id="btnVotar">Votar</button>
             </div>
         </form>
     </div>
     <script src="script.js"></script>
+
+    <script>
+        function validarSeleccion() {
+            var radios = document.getElementsByName('candidato');
+            var seleccionado = false;
+
+            for (var i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    seleccionado = true;
+                    // Utiliza 'value' para obtener el ID del candidato
+                    document.getElementById('idCandidatoSeleccionado').value = radios[i].value;
+                    break;
+                }
+            }
+
+            if (!seleccionado) {
+                alert('Seleccione un candidato antes de votar.');
+                return false; // Evita el envío del formulario
+            }
+
+            return true;
+        }
+    </script>
 </body>
 </html>
-<!--dsdsds-->>
-
-
