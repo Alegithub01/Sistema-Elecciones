@@ -32,12 +32,13 @@ h1 {
 #casillasContainer {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    width: 100%;
+    justify-content: space-around;
+    width: 80%;
+    height: 80%;
 }
 
 .candidato {
-    width: 25%;
+    width: 15%; /* Cambiado el ancho a un porcentaje más bajo */
     box-sizing: border-box;
     margin: 10px;
     background-color: #19568b;
@@ -49,13 +50,14 @@ h1 {
     display: inline-block;
 }
 
+
 .candidato:hover {
     box-shadow: 0 0 30px rgba(8, 7, 16, 0.6);
 }
 
-.fotoCandidato {
+img {
     width: 100%;
-    height: 150px; /* Ajusta la altura deseada para todas las imágenes */
+    height: 110px;
     object-fit: cover;
     border-bottom: 2px solid #fff;
 }
@@ -64,11 +66,13 @@ h1 {
     padding: 20px;
     width: 100%;
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 0 0 10px 10px; /* Añade bordes redondeados abajo */
+    border-radius: 0 0 10px 10px; 
 }
 
-.check {
-    display: none;
+.infoCandidato p {
+    color: #000539;
+    height: 40px; /* Altura fija */
+    overflow: hidden;
 }
 
 label {
@@ -77,12 +81,7 @@ label {
 }
 
 label:hover {
-    background-color: #e0e0e0;
-}
-
-.check:checked + label {
     background-color: #f50057;
-    color: #fff;
 }
 
 #btnVotar {
@@ -109,7 +108,7 @@ label:hover {
 }
 
 .imagen-votar {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     margin-right: 10px;
 }

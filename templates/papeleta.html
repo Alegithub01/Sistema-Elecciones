@@ -14,13 +14,14 @@
             <div class="candidates-container">
                 {% for candidato in candidatos %}
                 <div class="candidato">
-                    <input type="radio" name="candidato" id="{{ candidato.ci_persona }}" class="check" value="{{ candidato.id_candidato }}">
+                    
                     <label for="{{ candidato.ci_persona }}">
                         <div class="infoCandidato">
                             <img src="{{ url_for('static', filename='img/' + candidato.imagen_path) }}" alt="{{ candidato.ci_persona }}">
                             <p>{{ candidato.persona.ap_paterno }}</p>
                             <p>{{ candidato.partido.siglas }}</p>
                         </div>
+                        <input type="radio" name="candidato" id="{{ candidato.ci_persona }}" class="check" value="{{ candidato.id_candidato }}">
                     </label>
                 </div>
                 {% endfor %}
