@@ -1,7 +1,5 @@
 <!-- resultados.html -->
 
-<!-- resultados.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -26,23 +24,22 @@
                     <th>Candidato</th>
                     <th>Votos</th>
                     <th>Porcentaje</th>
-                    <th>Total Votos</th>
                 </tr>
                 {% for resultado in resultados %}
                     <tr>
-                        <!-- Elimina las columnas ID Resultado e ID Eleccion -->
-                        <td>{{ resultado.candidato }}</td>
-                        <td>{{ resultado.votos }}</td>
-                        <td>{{ '%.1f%%' % resultado.porcentaje }}</td>
-                        <td>{{ total_votos }}</td>  <!-- Muestra el total de votos -->
+                        <td>{{ resultado[0] }}</td>
+                        <td>{{ resultado[1] }}</td>
+                        <td>{{ '%.1f%%' % resultado[2] }}</td>
                     </tr>
                 {% endfor %}
             </table>
+        </div>
+        <div class="total-container">
+            <p style="color: #fff">Total de votos: {{ total_votos }}</p>
         </div>
     </div>
     <div class="print-button-container">
         <button onclick="imprimir()">Imprimir</button>
     </div>
-
 </body>
 </html>

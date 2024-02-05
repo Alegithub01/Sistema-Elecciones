@@ -1,14 +1,24 @@
-{% extends "login.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/loginStyle.css">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <title>Tribunal Login</title>
+</head>
+<body>
+    <form class="form" action="{{url_for('login_tribunal')}}" method="post">
+        <h3>Login Tribunal</h3>
 
-{% block titulo%}
-<h2>LOGIN TRIBUNAL</h2>
-{% endblock %}
+        <label for="usuario">Usuario:</label>
+        <input type="text" placeholder="Nombre Usuario" style="color: #000539" id="usuario" name="usuario" required>
 
-{% block user%}
-<label for="user" class="formLabel">Usuario:</label>
-{% endblock %}
+        <label for="password">Contrasena:</label>
+        <input type="password" placeholder="Contrasena" style="color: #000539" id="password" name="password" required>
 
-{%block pass%}
-<label for="password" class="formLabel">Contraseña:</label>
-{%endblock%}
+        <button type="submit" style="color: #fff;">Login</button>
+    </form>
 
+</body>
+</html>

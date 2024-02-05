@@ -1,7 +1,8 @@
 from flask import Flask, render_template,request, redirect, session, flash, url_for,jsonify
 from flask_sqlalchemy import SQLAlchemy
-
-
+import io
+import base64
+from matplotlib import pyplot as plt
 
 app = Flask(__name__)
 app.secret_key = 'cochabamba'
@@ -50,7 +51,11 @@ class Candidato(db.Model):
     partido = db.relationship('Partido')
     imagen_path = db.Column(db.String(255), nullable=False)
 
-
+class Tribunal(db.Model):
+    __tablename__ = 'tribunal'
+    id_tribunal = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
 
 class Voto(db.Model):
     __tablename__ = 'voto'
@@ -58,12 +63,25 @@ class Voto(db.Model):
     id_candidato = db.Column(db.Integer, db.ForeignKey('candidato.id_candidato'), nullable=False)
     candidato = db.relationship('Candidato')
 
-
 @app.route("/")
 def login_elector():
     titulo = "LOGIN ELECTOR"
     return render_template("login.html", titulo=titulo)
 
+
+@app.route("/loginTribunal", methods=["GET", "POST"])
+def login_tribunal():
+    if request.method == "POST":
+        username = request.form["usuario"]
+        password = request.form["password"]
+
+        usuario = Tribunal.query.filter_by(username = username).first()
+        if usuario and password == usuario.password:
+            return redirect(url_for('resultados'))
+        return redirect(url_for('error_login_tribunal', user=username))
+
+    titulo = "LOGIN TRIBUNAL"
+    return render_template("login_tribunal.html", titulo=titulo)
 
 @app.route('/autenticar', methods=['POST'])
 def autenticar():
@@ -85,21 +103,55 @@ def error_autenticacion(ci, fecha_nacimiento):
     return render_template('mensajeError.html', ci=ci, fecha_nacimiento=fecha_nacimiento)
 
 
+
+@app.route('/error_login/<user>')
+def error_login_tribunal(user):
+    return render_template('mensajeTribunal.html', user=user)
+
 @app.route('/resultados')
 def resultados():
     try:
-        # Aquí deberías tener lógica para obtener los resultados desde tu base de datos
-        # Los resultados podrían ser algo como una lista de diccionarios
-        resultados = [
-            {"candidato": "Candidato1", "votos": 150, "porcentaje": 50.0},
-            {"candidato": "Candidato2", "votos": 100, "porcentaje": 33.3},
-            {"candidato": "Candidato3", "votos": 50, "porcentaje": 16.7},
-        ]
+        candidatos = Candidato.query.all()
+        votos = Voto.query.all()
 
         # Calcular la suma total de votos
-        total_votos = sum(resultado['votos'] for resultado in resultados)
+        total_votos = len(votos)
 
-        return render_template('resultados.html', resultados=resultados, total_votos=total_votos)
+        # Crear la lista de duplas (candidato, porcentaje)
+        resultados = [
+            (
+                candidato.persona.nombres + " " + candidato.persona.ap_paterno + " " + candidato.persona.ap_materno,
+                len([voto for voto in votos if voto.id_candidato == candidato.id_candidato]),
+                len([voto for voto in votos if voto.id_candidato == candidato.id_candidato]) / total_votos * 100
+            )
+            for candidato in candidatos
+        ]
+
+
+        # Crear la gráfica de barras con colores diferentes de la paleta tab10 y mayor resolución
+        plt.figure(figsize=(8, 8), dpi=300)  # Ajusta el valor de dpi según sea necesario
+        colors = plt.cm.tab10.colors  # Utiliza la paleta de colores tab10 de Matplotlib
+        bars = plt.bar([result[0] for result in resultados], [result[1] for result in resultados], alpha=0.7, color=colors)
+
+        # Añadir etiquetas de porcentaje en las torres
+        for bar in bars:
+            yval = bar.get_height()
+            plt.text(bar.get_x() + bar.get_width() / 2, yval, f'{yval:.1f}%', ha='center', va='bottom')
+
+        plt.xlabel('Candidatos')
+        plt.ylabel('Porcentaje')
+        plt.title('Resultados de la Elección')
+
+        # Guardar la gráfica en un objeto de bytes
+        img = io.BytesIO()
+        plt.savefig(img, format='png')
+        img.seek(0)
+
+        # Convertir la gráfica a base64 para mostrarla en la plantilla
+        graph_url = base64.b64encode(img.getvalue()).decode()
+        img.close()
+
+        return render_template('resultados.html', resultados=resultados, total_votos=total_votos, graph_url=graph_url)
 
     except Exception as e:
         return f"Error: {str(e)}"
@@ -166,209 +218,3 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     app.run(debug=True)
-
-'''@app.route('/home/<ci>')
-def obtener_informacion_elector(ci):
-    try:
-        conn = mysql.connector.connect(**DATABASE_CONFIG)
-        cursor = conn.cursor(dictionary=True)
-
-        consulta = "SELECT * FROM Usuario WHERE ci = %s"
-        cursor.execute(consulta, (ci,))
-        elector = cursor.fetchone()
-
-        cursor.close()
-        conn.close()
-
-        return render_template('home.html', elector=elector)
-
-    except mysql.connector.Error as err:
-        return f"Error en la base de datos: {err}"
-
-
-@app.route("/home_elector", methods=["GET", "POST"])
-def home_elector():
-    if request.method == "POST":
-        ci = request.form.get("user")
-        fecha_nacimiento = request.form.get("password")
-
-        try:
-            # Crear una conexión a la base de datos
-            conn = mysql.connector.connect(**DATABASE_CONFIG)
-            cursor = conn.cursor(dictionary=True)
-
-            # Consultar la base de datos para verificar las credenciales
-            query = "SELECT * FROM Usuario WHERE ci = %s AND fecha_nacimiento = %s"
-            values = (ci, fecha_nacimiento)
-            cursor.execute(query, values)
-
-            # Obtener el resultado de la consulta
-            persona = cursor.fetchone()
-
-            if persona:
-                # Si las credenciales son correctas, redirigir a la página de inicio con el número de CI
-                return redirect(url_for('obtener_informacion_elector', ci=ci))
-            else:
-                # Si las credenciales son incorrectas, mostrar un mensaje de error
-                error_message = "Carnet de identidad o fecha de nacimiento incorrectos."
-                return render_template("login.html", titulo="Inicio de Sesión", error_message=error_message)
-
-        except Exception as e:
-            # En caso de error, mostrar un mensaje de error
-            error_message = f"Error: {str(e)}"
-            return render_template("login.html", titulo="Inicio de Sesión", error_message=error_message)
-
-        finally:
-            # Cerrar la conexión y el cursor
-            cursor.close()
-            conn.close()
-
-    return render_template("login.html", titulo="Inicio de Sesión")
-
-
-@app.route("/registro_persona", methods=["GET", "POST"])
-def registro_persona():
-    if request.method == "POST":
-        ci = request.form.get("ci")
-        id_distrito = request.form.get("id_distrito")
-        id_departamento = request.form.get("id_departamento")
-        nombres = request.form.get("nombres")
-        apellidos = request.form.get("apellidos")
-        fecha_nacimiento = request.form.get("fecha_nacimiento")
-        direccion = request.form.get("direccion")
-        genero = request.form.get("genero")
-
-        # Puedes obtener los campos opcionales si son proporcionados en el formulario
-        carnet = request.files.get("carnet")
-        foto = request.files.get("foto")
-
-        try:
-            # Crear una conexión a la base de datos
-            conn = mysql.connector.connect(**DATABASE_CONFIG)
-            cursor = conn.cursor()
-
-            # Ejecutar la consulta de inserción
-            query = "INSERT INTO Usuario (ci, id_distrito, id_departamento, nombres, apellidos, fecha_nacimiento, direccion, genero, habilitado, carnet, foto) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, TRUE, %s, %s)"
-            values = (ci, id_distrito, id_departamento, nombres, apellidos, fecha_nacimiento, direccion, genero, carnet.read() if carnet else None, foto.read() if foto else None)
-            cursor.execute(query, values)
-
-            # Confirmar la transacción
-            conn.commit()
-
-            return "Persona registrada exitosamente."
-
-        except Exception as e:
-            # En caso de error, realizar un rollback
-            conn.rollback()
-            return f"Error al registrar la persona: {str(e)}"
-
-        finally:
-            # Cerrar la conexión y el cursor
-            cursor.close()
-            conn.close()
-
-    return render_template("registro_persona.html")
-
-
-
-@app.route("/registro_distrito", methods=["GET", "POST"])
-def registro_distrito():
-    if request.method == "POST":
-        nombre_distrito = request.form.get("nombre")
-        id_departamento = request.form.get("departamento")
-
-        try:
-            # Crear una conexión a la base de datos
-            conn = mysql.connector.connect(**DATABASE_CONFIG)
-            cursor = conn.cursor()
-
-            # Ejecutar la consulta de inserción con ID automático
-            query = "INSERT INTO Distrito (nombre, id_departamento) VALUES (%s, %s)"
-            values = (nombre_distrito, id_departamento)
-            cursor.execute(query, values)
-
-            # Confirmar la transacción
-            conn.commit()
-
-            return "Distrito registrado exitosamente."
-
-        except Exception as e:
-            # En caso de error, realizar un rollback
-            conn.rollback()
-            return f"Error al registrar el distrito: {str(e)}"
-
-        finally:
-            # Cerrar la conexión y el cursor
-            cursor.close()
-            conn.close()
-
-    # Obtener la lista de departamentos para el formulario
-    departamentos = obtener_lista_departamentos()
-
-    return render_template("registro_distrito.html", departamentos=departamentos)
-
-
-def obtener_lista_departamentos():
-    try:
-        # Crear una conexión a la base de datos
-        conn = mysql.connector.connect(**DATABASE_CONFIG)
-        cursor = conn.cursor()
-
-        # Consultar la lista de departamentos
-        query = "SELECT id_departamento, nombre FROM Departamento"
-        cursor.execute(query)
-
-        # Obtener los resultados
-        departamentos = cursor.fetchall()
-
-        return departamentos
-
-    except Exception as e:
-        print(f"Error al obtener la lista de departamentos: {str(e)}")
-
-    finally:
-        # Cerrar la conexión y el cursor
-        cursor.close()
-        conn.close()
-
-
-@app.route("/registro_departamento", methods=["GET", "POST"])
-def registro_departamento():
-    if request.method == "POST":
-        nombre_departamento = request.form.get("nombre")
-        try:
-            # Crear una conexión a la base de datos
-            conn = mysql.connector.connect(**DATABASE_CONFIG)
-            cursor = conn.cursor()
-            # Ejecutar la consulta de inserción con ID automático
-            query = "INSERT INTO Departamento (nombre) VALUES (%s)"
-            values = (nombre_departamento,)
-            cursor.execute(query, values)
-            # Confirmar la transacción
-            conn.commit()
-            return "Departamento registrado exitosamente."
-
-        except Exception as e:
-            # En caso de error, realizar un rollback
-            conn.rollback()
-            return f"Error al registrar el departamento: {str(e)}"
-
-        finally:
-            # Cerrar la conexión y el cursor
-            cursor.close()
-            conn.close()
-
-    return render_template("registro_departamento.html")
-
-
-
-@app.route("/administrador")
-def login_administrador():
-    titulo="LOGIN ADMINISTRACION"
-    return render_template("login_administrador.html",titulo=titulo)
-
-@app.route("/tribunal")
-def login_tribunal():
-    titulo="LOGIN TRIBUNAL"
-    return render_template("login_tribunal.html",titulo=titulo)
-'''

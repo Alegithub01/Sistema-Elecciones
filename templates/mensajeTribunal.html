@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/errorStyle.css">
+    <link rel="shortcut icon" href="/static/img/favicon.png">
+    <title>Tribunal Authentication Error</title>
+    <script>
+        // Wait for 5 seconds and then redirect to the main page
+        setTimeout(function() {
+            window.location.href = '/loginTribunal';
+        }, 5000);
+    </script>
+</head>
+<body>
+    <form class="form" action="/loginTribunal" method="get">
+        <h3>Error de inicio de Sesion como Tribunal!</h3>
+
+        <p><strong>Username:</strong> {{ user }}</p>
+
+        <h2>Usuario no registrado como tribunal</h2>
+    </form>
+</body>
+</html>
